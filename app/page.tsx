@@ -559,7 +559,9 @@ function ProjectsSection() {
    ============================ */
 function GuideSection() {
   const { ref, isVisible } = useScrollAnimation();
+  const [guideCategory, setGuideCategory] = useState<"bank" | "hometax">("bank");
   const [selectedBank, setSelectedBank] = useState("신한");
+  const [hometaxDevice, setHometaxDevice] = useState<"pc" | "mobile">("pc");
 
   const bankData: Record<string, { menu: string; steps: string[] }> = {
     "신한": {
@@ -602,6 +604,27 @@ function GuideSection() {
 
   const banks = Object.keys(bankData);
 
+  const hometaxData = {
+    pc: {
+      menu: "[세무대리·납세관리] → [나의 세무대리 관리] → [나의 세무대리 수임동의]",
+      steps: [
+        "홈택스 접속 및 로그인 (공동/금융인증서 또는 간편인증)",
+        "상단 [세무대리·납세관리] 메뉴 선택",
+        "[나의 세무대리 관리] → [나의 세무대리 수임동의] 클릭",
+        "세무대리인 정보 확인 후 [동의] 체크 및 확인"
+      ]
+    },
+    mobile: {
+      menu: "[전체메뉴] → [세무대리·납세관리] → [나의 세무대리 관리] → [기장대리 수임동의]",
+      steps: [
+        "손택스 앱 접속 및 로그인 (공동/금융인증서 등)",
+        "하단 [전체메뉴] 버튼 클릭",
+        "[세무대리·납세관리] → [나의 세무대리 관리] 선택",
+        "[기장대리 수임동의] 클릭 후 내역 확인 및 동의"
+      ]
+    }
+  };
+
   return (
     <section id="guide" className="py-16 bg-secondary/10">
       <div
@@ -612,75 +635,179 @@ function GuideSection() {
       >
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
-            은행별 빠른조회(스피드조회) 가이드
+            거래처 업무 가이드
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base">
-            수임 거래처의 은행을 선택하시면 상세 등록 방법을 확인하실 수 있습니다.
+            원활한 업무 처리를 위한 필수 등록 가이드입니다.
           </p>
         </div>
 
-        {/* 은행 선택 탭 (가로 스크롤 가능) */}
-        <div className="flex overflow-x-auto pb-4 mb-8 gap-2 no-scrollbar">
-          {banks.map((bank) => (
+        {/* 카테고리 선택 */}
+        <div className="flex justify-center mb-10">
+          <div className="inline-flex p-1 bg-card rounded-xl border border-border shadow-inner">
             <button
-              key={bank}
-              onClick={() => setSelectedBank(bank)}
-              className={`px-6 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border-2 ${
-                selectedBank === bank
-                  ? "bg-primary border-primary text-primary-foreground shadow-lg"
-                  : "bg-card border-border text-muted-foreground hover:border-primary/50"
+              onClick={() => setGuideCategory("bank")}
+              className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ${
+                guideCategory === "bank"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {bank}은행
+              은행 빠른조회
             </button>
-          ))}
+            <button
+              onClick={() => setGuideCategory("hometax")}
+              className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ${
+                guideCategory === "hometax"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              세무대리 수임동의
+            </button>
+          </div>
         </div>
 
-        <Card className="overflow-hidden border-2 border-primary/20 shadow-2xl">
-          <div className="bg-primary px-6 py-4 flex items-center justify-between">
-            <h2 className="text-lg sm:text-xl font-bold text-primary-foreground flex items-center gap-2">
-              <Calculator className="w-5 h-5" />
-              {selectedBank}은행 빠른조회 등록 방법
-            </h2>
-            <span className="hidden sm:inline-block text-xs bg-white/20 text-white px-2 py-1 rounded-full font-mono">
-              BANK GUIDE
-            </span>
-          </div>
-          
-          <CardContent className="p-6 sm:p-8 bg-card">
-            <div className="mb-8 p-4 bg-primary/5 rounded-xl border border-primary/10">
-              <p className="text-sm font-semibold text-primary mb-1">메뉴 경로:</p>
-              <p className="text-foreground font-medium">{bankData[selectedBank].menu}</p>
-            </div>
-
-            <div className="space-y-6">
-              {bankData[selectedBank].steps.map((step, index) => (
-                <div key={index} className="flex gap-4 group">
-                  <div className="flex flex-col items-center">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center font-bold text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-                      {index + 1}
-                    </div>
-                    {index < 3 && (
-                      <div className="w-0.5 h-full bg-primary/10 mt-1" />
-                    )}
-                  </div>
-                  <div className="pb-4">
-                    <h3 className="font-bold text-foreground text-base sm:text-lg">{step}</h3>
-                  </div>
-                </div>
+        {guideCategory === "bank" ? (
+          <>
+            {/* 은행 선택 탭 (가로 스크롤 가능) */}
+            <div className="flex overflow-x-auto pb-4 mb-8 gap-2 no-scrollbar">
+              {banks.map((bank) => (
+                <button
+                  key={bank}
+                  onClick={() => setSelectedBank(bank)}
+                  className={`px-6 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border-2 ${
+                    selectedBank === bank
+                      ? "bg-primary border-primary text-primary-foreground shadow-lg"
+                      : "bg-card border-border text-muted-foreground hover:border-primary/50"
+                  }`}
+                >
+                  {bank}은행
+                </button>
               ))}
             </div>
 
-            <div className="mt-6 pt-6 border-t border-dashed border-primary/30">
-              <div className="flex items-start gap-3 bg-primary/5 p-4 rounded-lg">
-                <CheckCircle className="w-5 h-5 text-accent shrink-0 mt-0.5" />
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  <strong className="text-primary">필독:</strong> 등록 후 <strong>계좌번호</strong>와 설정하신 <strong>조회용 비밀번호(6자리)</strong>를 세무사에게 알려주시면 인증서 없이 실시간 장부 정리가 가능합니다.
-                </p>
+            <Card className="overflow-hidden border-2 border-primary/20 shadow-2xl">
+              <div className="bg-primary px-6 py-4 flex items-center justify-between">
+                <h2 className="text-lg sm:text-xl font-bold text-primary-foreground flex items-center gap-2">
+                  <Calculator className="w-5 h-5" />
+                  {selectedBank}은행 빠른조회 등록 방법
+                </h2>
+                <span className="hidden sm:inline-block text-xs bg-white/20 text-white px-2 py-1 rounded-full font-mono">
+                  BANK GUIDE
+                </span>
               </div>
+              
+              <CardContent className="p-6 sm:p-8 bg-card">
+                <div className="mb-8 p-4 bg-primary/5 rounded-xl border border-primary/10">
+                  <p className="text-sm font-semibold text-primary mb-1">메뉴 경로:</p>
+                  <p className="text-foreground font-medium">{bankData[selectedBank].menu}</p>
+                </div>
+
+                <div className="space-y-6">
+                  {bankData[selectedBank].steps.map((step, index) => (
+                    <div key={index} className="flex gap-4 group">
+                      <div className="flex flex-col items-center">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center font-bold text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                          {index + 1}
+                        </div>
+                        {index < bankData[selectedBank].steps.length - 1 && (
+                          <div className="w-0.5 h-full bg-primary/10 mt-1" />
+                        )}
+                      </div>
+                      <div className="pb-4">
+                        <h3 className="font-bold text-foreground text-base sm:text-lg">{step}</h3>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-dashed border-primary/30">
+                  <div className="flex items-start gap-3 bg-primary/5 p-4 rounded-lg">
+                    <CheckCircle className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      <strong className="text-primary">필독:</strong> 등록 후 <strong>계좌번호</strong>와 설정하신 <strong>조회용 비밀번호(6자리)</strong>를 세무사에게 알려주시면 인증서 없이 실시간 장부 정리가 가능합니다.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        ) : (
+          <>
+            {/* 홈택스 기기 선택 */}
+            <div className="flex justify-center mb-8 gap-4">
+              <button
+                onClick={() => setHometaxDevice("pc")}
+                className={`flex-1 max-w-[200px] py-3 rounded-xl border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
+                  hometaxDevice === "pc"
+                    ? "border-primary bg-primary/5 text-primary"
+                    : "border-border bg-card text-muted-foreground hover:border-primary/30"
+                }`}
+              >
+                <Calculator className="w-6 h-6" />
+                <span className="font-bold">PC (홈택스)</span>
+              </button>
+              <button
+                onClick={() => setHometaxDevice("mobile")}
+                className={`flex-1 max-w-[200px] py-3 rounded-xl border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
+                  hometaxDevice === "mobile"
+                    ? "border-primary bg-primary/5 text-primary"
+                    : "border-border bg-card text-muted-foreground hover:border-primary/30"
+                }`}
+              >
+                <Calculator className="w-6 h-6 rotate-90" />
+                <span className="font-bold">모바일 (손택스)</span>
+              </button>
             </div>
-          </CardContent>
-        </Card>
+
+            <Card className="overflow-hidden border-2 border-primary/20 shadow-2xl">
+              <div className="bg-primary px-6 py-4 flex items-center justify-between">
+                <h2 className="text-lg sm:text-xl font-bold text-primary-foreground flex items-center gap-2">
+                  <FileText className="w-5 h-5" />
+                  {hometaxDevice === "pc" ? "홈택스" : "손택스"} 세무대리 수임동의 방법
+                </h2>
+                <span className="hidden sm:inline-block text-xs bg-white/20 text-white px-2 py-1 rounded-full font-mono">
+                  HOMETAX GUIDE
+                </span>
+              </div>
+              
+              <CardContent className="p-6 sm:p-8 bg-card">
+                <div className="mb-8 p-4 bg-primary/5 rounded-xl border border-primary/10">
+                  <p className="text-sm font-semibold text-primary mb-1">메뉴 경로:</p>
+                  <p className="text-foreground font-medium">{hometaxData[hometaxDevice].menu}</p>
+                </div>
+
+                <div className="space-y-6">
+                  {hometaxData[hometaxDevice].steps.map((step, index) => (
+                    <div key={index} className="flex gap-4 group">
+                      <div className="flex flex-col items-center">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center font-bold text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                          {index + 1}
+                        </div>
+                        {index < hometaxData[hometaxDevice].steps.length - 1 && (
+                          <div className="w-0.5 h-full bg-primary/10 mt-1" />
+                        )}
+                      </div>
+                      <div className="pb-4">
+                        <h3 className="font-bold text-foreground text-base sm:text-lg">{step}</h3>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-dashed border-primary/30">
+                  <div className="flex items-start gap-3 bg-primary/5 p-4 rounded-lg">
+                    <CheckCircle className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      <strong className="text-primary">주의:</strong> 기존에 등록된 세무대리인이 있는 경우, 먼저 <strong>해임</strong> 절차를 진행하신 후 새로운 수임동의가 가능합니다.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
     </section>
   );

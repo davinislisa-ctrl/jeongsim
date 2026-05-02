@@ -310,7 +310,7 @@ function AboutSection() {
               <Card className="bg-secondary/50 border-border hover:border-primary/50 transition-colors">
                 <CardContent className="p-4">
                   <CheckCircle className="w-6 h-6 text-accent mb-2" />
-                  <h4 className="font-medium text-foreground">정확�� 분석</h4>
+                  <h4 className="font-medium text-foreground">정확한 분석</h4>
                   <p className="text-sm text-muted-foreground">데이터 기반의 정확한 세무 분석</p>
                 </CardContent>
               </Card>

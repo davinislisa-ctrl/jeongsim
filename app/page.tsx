@@ -559,9 +559,19 @@ function ProjectsSection() {
    ============================ */
 function GuideSection() {
   const { ref, isVisible } = useScrollAnimation();
-  const [guideCategory, setGuideCategory] = useState<"bank" | "hometax">("bank");
+  const [guideCategory, setGuideCategory] = useState<"bank" | "hometax" | "loan">("bank");
   const [selectedBank, setSelectedBank] = useState("신한");
   const [hometaxDevice, setHometaxDevice] = useState<"pc" | "mobile">("pc");
+
+  const loanData: Record<string, string> = {
+    "신한": "대출 → 대출이자납입확인서",
+    "국민": "뱅킹관리 → 제증명서 발급 → 연말정산증명서 (또는 대출이자납입증명서)",
+    "우리": "대출 → 이자납입 → 이자납입내역서조회",
+    "하나": "대출 → 대출거래내역조회 → 이자납입내역서",
+    "농협": "뱅킹관리 → 증명서 → 연말정산증명서 (또는 대출거래내역조회)",
+    "기업": "뱅킹관리 → 제증명서발급 → 대출관련증명서",
+    "하나(기업)": "기업대출 → 대출계좌조회 → 이자납입내역조회"
+  };
 
   const bankData: Record<string, { menu: string; steps: string[] }> = {
     "신한": {
@@ -644,10 +654,10 @@ function GuideSection() {
 
         {/* 카테고리 선택 */}
         <div className="flex justify-center mb-10">
-          <div className="inline-flex p-1 bg-card rounded-xl border border-border shadow-inner">
+          <div className="inline-flex p-1 bg-card rounded-xl border border-border shadow-inner overflow-x-auto no-scrollbar">
             <button
               onClick={() => setGuideCategory("bank")}
-              className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ${
+              className={`px-4 sm:px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 whitespace-nowrap ${
                 guideCategory === "bank"
                   ? "bg-primary text-primary-foreground shadow-md"
                   : "text-muted-foreground hover:text-foreground"
@@ -657,13 +667,23 @@ function GuideSection() {
             </button>
             <button
               onClick={() => setGuideCategory("hometax")}
-              className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ${
+              className={`px-4 sm:px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 whitespace-nowrap ${
                 guideCategory === "hometax"
                   ? "bg-primary text-primary-foreground shadow-md"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
               세무대리 수임동의
+            </button>
+            <button
+              onClick={() => setGuideCategory("loan")}
+              className={`px-4 sm:px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 whitespace-nowrap ${
+                guideCategory === "loan"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              대출이자 납입확인서
             </button>
           </div>
         </div>
@@ -733,7 +753,7 @@ function GuideSection() {
               </CardContent>
             </Card>
           </>
-        ) : (
+        ) : guideCategory === "hometax" ? (
           <>
             {/* 홈택스 기기 선택 */}
             <div className="flex justify-center mb-8 gap-4">
@@ -807,7 +827,68 @@ function GuideSection() {
               </CardContent>
             </Card>
           </>
-        )}
+        ) : (
+          <>
+            <Card className="overflow-hidden border-2 border-primary/20 shadow-2xl">
+              <div className="bg-primary px-6 py-4 flex items-center justify-between">
+                <h2 className="text-lg sm:text-xl font-bold text-primary-foreground flex items-center gap-2">
+                  <CreditCard className="w-5 h-5" />
+                  은행별 대출이자 납입확인서 발급 경로
+                </h2>
+                <span className="hidden sm:inline-block text-xs bg-white/20 text-white px-2 py-1 rounded-full font-mono">
+                  LOAN INTEREST GUIDE
+                </span>
+              </div>
+              
+              <CardContent className="p-0 bg-card">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-primary/5 text-primary uppercase font-bold border-b border-primary/10">
+                      <tr>
+                        <th className="px-6 py-4">은행명</th>
+                        <th className="px-6 py-4">발급 메뉴 경로 (인터넷뱅킹 기준)</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {Object.entries(loanData).map(([bank, path], index) => (
+                        <tr key={index} className="hover:bg-primary/5 transition-colors">
+                          <td className="px-6 py-4 font-bold text-foreground whitespace-nowrap">{bank}은행</td>
+                          <td className="px-6 py-4 text-muted-foreground">{path}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                
+                <div className="p-6 sm:p-8 border-t border-border">
+                  <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-primary" />
+                    공통 발급 및 제출 안내
+                  </h3>
+                  <ul className="space-y-3 text-sm text-muted-foreground">
+                    <li className="flex gap-2">
+                      <span className="text-primary font-bold">•</span>
+                      <span><strong>준비물:</strong> 공동인증서, 금융인증서 또는 간편인증 로그인이 필요합니다.</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-primary font-bold">•</span>
+                      <span><strong>기간 설정:</strong> 전년도 1월 1일부터 12월 31일까지 등 필요한 기간을 정확히 설정해 주세요.</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-primary font-bold">•</span>
+                      <span><strong>제출 방법:</strong> PDF 파일로 저장하여 이메일로 보내주시거나, 출력 후 팩스로 전달해 주시면 됩니다.</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-primary font-bold">•</span>
+                      <span><strong>주의사항:</strong> 대출이 개인사업자 명의라면 <strong>기업뱅킹</strong>으로 접속해야 조회가 가능할 수 있습니다.</span>
+                    </li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )
+      }
       </div>
     </section>
   );

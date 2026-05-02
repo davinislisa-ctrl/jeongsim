@@ -97,6 +97,7 @@ function Navigation() {
     { label: "소개", href: "#about" },
     { label: "스킬", href: "#skills" },
     { label: "프로젝트", href: "#projects" },
+    { label: "가이드", href: "#guide" },
     { label: "후기", href: "#testimonials" },
     { label: "문의", href: "#contact" },
   ];
@@ -547,6 +548,100 @@ function ProjectsSection() {
 }
 
 /* ============================
+   거래처 가이드 섹션 (신한은행 빠른조회)
+   ============================ */
+function GuideSection() {
+  const { ref, isVisible } = useScrollAnimation();
+
+  const steps = [
+    {
+      title: "신한은행 접속",
+      desc: "신한은행 기업/개인 뱅킹 로그인 후 상단 [관리/서비스] 메뉴를 클릭합니다.",
+      icon: ExternalLink,
+    },
+    {
+      title: "메뉴 선택",
+      desc: "[계좌조회서비스] 메뉴 내에 있는 [빠른조회계좌 등록]을 선택합니다.",
+      icon: Menu,
+    },
+    {
+      title: "정보 입력",
+      desc: "등록할 계좌번호를 확인하고, 조회용 비밀번호(6자리)를 설정합니다.",
+      icon: FileText,
+    },
+    {
+      title: "등록 완료",
+      desc: "등록 완료 후 세무사에게 계좌번호와 설정한 비밀번호를 알려주시면 됩니다.",
+      icon: CheckCircle,
+    },
+  ];
+
+  return (
+    <section id="guide" className="py-20 lg:py-32 bg-secondary/20">
+      <div
+        ref={ref}
+        className={`max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-700 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
+      >
+        <div className="text-center mb-12">
+          <p className="font-mono text-accent text-sm mb-2">04. Client Guide</p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
+            신한은행 빠른조회 등록 방법
+          </h2>
+          <p className="text-muted-foreground mt-4">
+            수임 거래처의 신속한 장부 처리를 위해 빠른조회 계좌 등록을 권장합니다.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((step, index) => {
+            const Icon = step.icon;
+            return (
+              <div key={index} className="relative">
+                <Card className="h-full bg-card border-border hover:border-primary/50 transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                      <Icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <div className="absolute top-4 right-6 font-mono text-4xl text-primary/10 font-bold">
+                      0{index + 1}
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                      {step.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {step.desc}
+                    </p>
+                  </CardContent>
+                </Card>
+                {index < steps.length - 1 && (
+                  <div className="hidden lg:block absolute top-1/2 -right-3 -translate-y-1/2 z-10">
+                    <ArrowRight className="w-6 h-6 text-primary/30" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-12 p-6 bg-primary/5 border border-primary/20 rounded-xl flex items-start gap-4">
+          <div className="p-2 bg-primary/20 rounded-full">
+            <Calculator className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <h4 className="font-semibold text-foreground">왜 빠른조회가 필요한가요?</h4>
+            <p className="text-sm text-muted-foreground mt-1">
+              공인인증서나 ID 로그인 없이도 세무사가 계좌 내역을 실시간으로 확인하여 장부 작성을 훨씬 빠르고 정확하게 할 수 있기 때문입니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================
    추천/후기 섹션
    ============================ */
 function TestimonialsSection() {
@@ -714,6 +809,7 @@ export default function PortfolioPage() {
       <AboutSection />
       <SkillsSection />
       <ProjectsSection />
+      <GuideSection />
       <TestimonialsSection />
       <CTASection />
       <Footer />

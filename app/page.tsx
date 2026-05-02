@@ -548,52 +548,117 @@ function ProjectsSection() {
 }
 
 /* ============================
-   거래처 가이드 섹션 (신한은행 빠른조회) - 컴팩트 디자인
+   거래처 가이드 섹션 (은행별 빠른조회 통합)
    ============================ */
 function GuideSection() {
   const { ref, isVisible } = useScrollAnimation();
+  const [selectedBank, setSelectedBank] = useState("신한");
 
-  const steps = [
-    { title: "신한은행 로그인", desc: "기업/개인 뱅킹 접속 후 [관리/서비스] 메뉴 클릭" },
-    { title: "빠른조회 메뉴", desc: "[계좌조회서비스] → [빠른조회계좌 등록] 선택" },
-    { title: "계좌 등록", desc: "계좌번호 선택 및 조회용 비밀번호(6자리) 설정" },
-    { title: "정보 전달", desc: "세무사에게 계좌번호와 비밀번호 6자리 전달" },
-  ];
+  const bankData: Record<string, { menu: string; steps: string[] }> = {
+    "신한": {
+      menu: "[관리/서비스] → [계좌조회서비스] → [빠른조회계좌 등록]",
+      steps: ["뱅킹 로그인", "관리/서비스 메뉴 이동", "빠른조회계좌 등록", "계좌/비밀번호 설정"]
+    },
+    "국민": {
+      menu: "[뱅킹관리] → [계좌관리] → [빠른조회서비스]",
+      steps: ["KB스타뱅킹 로그인", "뱅킹관리 메뉴 선택", "빠른조회서비스 등록", "비밀번호 6자리 설정"]
+    },
+    "우리": {
+      menu: "[뱅킹관리] → [뱅킹계좌관리] → [스피드조회계좌등록/해지]",
+      steps: ["우리은행 뱅킹 로그인", "뱅킹계좌관리 이동", "스피드조회계좌 등록", "조회 암호 설정"]
+    },
+    "하나": {
+      menu: "[마이하나] → [계좌정보관리] → [빠른조회관리]",
+      steps: ["하나원큐 로그인", "계좌정보관리 선택", "빠른조회관리 등록", "간편 비밀번호 설정"]
+    },
+    "농협": {
+      menu: "[MY뱅크] → [뱅킹서비스관리] → [빠른조회]",
+      steps: ["NH농협 로그인", "뱅킹서비스관리 이동", "빠른조회 서비스 신청", "계좌번호 및 비번 입력"]
+    },
+    "기업": {
+      menu: "[뱅킹관리] → [계좌관리] → [빠른계좌조회서비스 신청/해지]",
+      steps: ["IBK기업은행 로그인", "뱅킹관리 메뉴 선택", "빠른계좌조회 신청", "조회 전용 비번 설정"]
+    },
+    "제일": {
+      menu: "[서비스 및 설정] → [통장관리] → [스피드조회등록]",
+      steps: ["SC제일은행 로그인", "통장관리 메뉴 이동", "스피드조회 서비스 등록", "비밀번호 설정"]
+    },
+    "새마을": {
+      menu: "[개인정보관리] → [즉시조회 계좌관리]",
+      steps: ["새마을금고 로그인", "개인정보관리 선택", "즉시조회 계좌 등록", "조회용 비번 설정"]
+    },
+    "우체국": {
+      menu: "[예금간편서비스] → [간편조회계좌등록]",
+      steps: ["우체국예금 로그인", "예금간편서비스 이동", "간편조회계좌 등록", "비밀번호 6자리 설정"]
+    }
+  };
+
+  const banks = Object.keys(bankData);
 
   return (
     <section id="guide" className="py-16 bg-secondary/10">
       <div
         ref={ref}
-        className={`max-w-3xl mx-auto px-4 transition-all duration-700 ${
+        className={`max-w-4xl mx-auto px-4 transition-all duration-700 ${
           isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
         }`}
       >
+        <div className="text-center mb-10">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
+            은행별 빠른조회(스피드조회) 가이드
+          </h2>
+          <p className="text-muted-foreground text-sm sm:text-base">
+            수임 거래처의 은행을 선택하시면 상세 등록 방법을 확인하실 수 있습니다.
+          </p>
+        </div>
+
+        {/* 은행 선택 탭 (가로 스크롤 가능) */}
+        <div className="flex overflow-x-auto pb-4 mb-8 gap-2 no-scrollbar">
+          {banks.map((bank) => (
+            <button
+              key={bank}
+              onClick={() => setSelectedBank(bank)}
+              className={`px-6 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border-2 ${
+                selectedBank === bank
+                  ? "bg-primary border-primary text-primary-foreground shadow-lg"
+                  : "bg-card border-border text-muted-foreground hover:border-primary/50"
+              }`}
+            >
+              {bank}은행
+            </button>
+          ))}
+        </div>
+
         <Card className="overflow-hidden border-2 border-primary/20 shadow-2xl">
           <div className="bg-primary px-6 py-4 flex items-center justify-between">
-            <h2 className="text-xl font-bold text-primary-foreground flex items-center gap-2">
+            <h2 className="text-lg sm:text-xl font-bold text-primary-foreground flex items-center gap-2">
               <Calculator className="w-5 h-5" />
-              신한은행 빠른조회 등록 (1분 완료)
+              {selectedBank}은행 빠른조회 등록 방법
             </h2>
-            <span className="text-xs bg-white/20 text-white px-2 py-1 rounded-full font-mono">
-              CLIENT GUIDE
+            <span className="hidden sm:inline-block text-xs bg-white/20 text-white px-2 py-1 rounded-full font-mono">
+              BANK GUIDE
             </span>
           </div>
           
-          <CardContent className="p-8 bg-card">
+          <CardContent className="p-6 sm:p-8 bg-card">
+            <div className="mb-8 p-4 bg-primary/5 rounded-xl border border-primary/10">
+              <p className="text-sm font-semibold text-primary mb-1">메뉴 경로:</p>
+              <p className="text-foreground font-medium">{bankData[selectedBank].menu}</p>
+            </div>
+
             <div className="space-y-6">
-              {steps.map((step, index) => (
+              {bankData[selectedBank].steps.map((step, index) => (
                 <div key={index} className="flex gap-4 group">
                   <div className="flex flex-col items-center">
                     <div className="w-8 h-8 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center font-bold text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                       {index + 1}
                     </div>
-                    {index < steps.length - 1 && (
+                    {index < 3 && (
                       <div className="w-0.5 h-full bg-primary/10 mt-1" />
                     )}
                   </div>
                   <div className="pb-4">
-                    <h3 className="font-bold text-foreground text-lg">{step.title}</h3>
-                    <p className="text-muted-foreground text-sm mt-1">{step.desc}</p>
+                    <h3 className="font-bold text-foreground text-base sm:text-lg">{step}</h3>
                   </div>
                 </div>
               ))}
@@ -603,7 +668,7 @@ function GuideSection() {
               <div className="flex items-start gap-3 bg-primary/5 p-4 rounded-lg">
                 <CheckCircle className="w-5 h-5 text-accent shrink-0 mt-0.5" />
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  <strong className="text-primary">팁:</strong> 등록 완료 후 세무사에게 알려주시면 인증서 없이도 실시간 내역 확인이 가능하여 <span className="text-accent font-semibold">장부 처리가 훨씬 빨라집니다!</span>
+                  <strong className="text-primary">필독:</strong> 등록 후 <strong>계좌번호</strong>와 설정하신 <strong>조회용 비밀번호(6자리)</strong>를 세무사에게 알려주시면 인증서 없이 실시간 장부 정리가 가능합니다.
                 </p>
               </div>
             </div>

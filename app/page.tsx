@@ -18,6 +18,7 @@ import {
   Briefcase,
   Award,
   BookOpen,
+  MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -218,12 +219,18 @@ function HeroSection() {
               <Button asChild variant="outline" size="lg" className="border-primary/50 text-primary hover:bg-primary/10">
                 <a href="#projects">프로젝트 보기</a>
               </Button>
+              <Button asChild size="lg" className="bg-[#FEE500] hover:bg-[#FEE500]/90 text-[#3C1E1E] border-none">
+                <a href="https://open.kakao.com/o/g0yKP2si" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5 fill-current" />
+                  상담하기 오픈단톡방
+                </a>
+              </Button>
             </div>
 
             {/* SNS 아이콘 */}
             <div className="flex gap-4 mt-8 justify-center lg:justify-start">
               <a
-                href="mailto:jeongsim@example.com"
+                href="mailto:kyong9144@naver.com"
                 className="p-3 rounded-full bg-card border border-border hover:border-primary hover:text-primary transition-all duration-200"
                 aria-label="이메일"
               >
@@ -774,7 +781,7 @@ function CTASection() {
           size="lg"
           className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 group"
         >
-          <a href="mailto:jeongsim@example.com">
+          <a href="mailto:kyong9144@naver.com">
             <Mail className="mr-2 w-5 h-5" />
             이메일 보내기
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -790,7 +797,7 @@ function CTASection() {
    ============================ */
 function Footer() {
   const socialLinks = [
-    { icon: Mail, href: "mailto:jeongsim@example.com", label: "이메일" },
+    { icon: Mail, href: "mailto:kyong9144@naver.com", label: "이메일" },
     { icon: Linkedin, href: "#", label: "LinkedIn" },
     { icon: Github, href: "#", label: "GitHub" },
   ];
@@ -802,7 +809,7 @@ function Footer() {
           <div className="text-center md:text-left">
             <p className="font-mono text-primary font-bold mb-1">{"<김정심 />"}</p>
             <p className="text-sm text-muted-foreground">
-              jeongsim@example.com
+              kyong9144@naver.com
             </p>
           </div>
 

@@ -548,94 +548,67 @@ function ProjectsSection() {
 }
 
 /* ============================
-   거래처 가이드 섹션 (신한은행 빠른조회)
+   거래처 가이드 섹션 (신한은행 빠른조회) - 컴팩트 디자인
    ============================ */
 function GuideSection() {
   const { ref, isVisible } = useScrollAnimation();
 
   const steps = [
-    {
-      title: "신한은행 접속",
-      desc: "신한은행 기업/개인 뱅킹 로그인 후 상단 [관리/서비스] 메뉴를 클릭합니다.",
-      icon: ExternalLink,
-    },
-    {
-      title: "메뉴 선택",
-      desc: "[계좌조회서비스] 메뉴 내에 있는 [빠른조회계좌 등록]을 선택합니다.",
-      icon: Menu,
-    },
-    {
-      title: "정보 입력",
-      desc: "등록할 계좌번호를 확인하고, 조회용 비밀번호(6자리)를 설정합니다.",
-      icon: FileText,
-    },
-    {
-      title: "등록 완료",
-      desc: "등록 완료 후 세무사에게 계좌번호와 설정한 비밀번호를 알려주시면 됩니다.",
-      icon: CheckCircle,
-    },
+    { title: "신한은행 로그인", desc: "기업/개인 뱅킹 접속 후 [관리/서비스] 메뉴 클릭" },
+    { title: "빠른조회 메뉴", desc: "[계좌조회서비스] → [빠른조회계좌 등록] 선택" },
+    { title: "계좌 등록", desc: "계좌번호 선택 및 조회용 비밀번호(6자리) 설정" },
+    { title: "정보 전달", desc: "세무사에게 계좌번호와 비밀번호 6자리 전달" },
   ];
 
   return (
-    <section id="guide" className="py-20 lg:py-32 bg-secondary/20">
+    <section id="guide" className="py-16 bg-secondary/10">
       <div
         ref={ref}
-        className={`max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-700 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        className={`max-w-3xl mx-auto px-4 transition-all duration-700 ${
+          isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
         }`}
       >
-        <div className="text-center mb-12">
-          <p className="font-mono text-accent text-sm mb-2">04. Client Guide</p>
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-            신한은행 빠른조회 등록 방법
-          </h2>
-          <p className="text-muted-foreground mt-4">
-            수임 거래처의 신속한 장부 처리를 위해 빠른조회 계좌 등록을 권장합니다.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            return (
-              <div key={index} className="relative">
-                <Card className="h-full bg-card border-border hover:border-primary/50 transition-all duration-300">
-                  <CardContent className="p-6">
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                      <Icon className="w-6 h-6 text-primary" />
+        <Card className="overflow-hidden border-2 border-primary/20 shadow-2xl">
+          <div className="bg-primary px-6 py-4 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-primary-foreground flex items-center gap-2">
+              <Calculator className="w-5 h-5" />
+              신한은행 빠른조회 등록 (1분 완료)
+            </h2>
+            <span className="text-xs bg-white/20 text-white px-2 py-1 rounded-full font-mono">
+              CLIENT GUIDE
+            </span>
+          </div>
+          
+          <CardContent className="p-8 bg-card">
+            <div className="space-y-6">
+              {steps.map((step, index) => (
+                <div key={index} className="flex gap-4 group">
+                  <div className="flex flex-col items-center">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center font-bold text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                      {index + 1}
                     </div>
-                    <div className="absolute top-4 right-6 font-mono text-4xl text-primary/10 font-bold">
-                      0{index + 1}
-                    </div>
-                    <h3 className="text-lg font-semibold text-foreground mb-2">
-                      {step.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {step.desc}
-                    </p>
-                  </CardContent>
-                </Card>
-                {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-3 -translate-y-1/2 z-10">
-                    <ArrowRight className="w-6 h-6 text-primary/30" />
+                    {index < steps.length - 1 && (
+                      <div className="w-0.5 h-full bg-primary/10 mt-1" />
+                    )}
                   </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                  <div className="pb-4">
+                    <h3 className="font-bold text-foreground text-lg">{step.title}</h3>
+                    <p className="text-muted-foreground text-sm mt-1">{step.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-        <div className="mt-12 p-6 bg-primary/5 border border-primary/20 rounded-xl flex items-start gap-4">
-          <div className="p-2 bg-primary/20 rounded-full">
-            <Calculator className="w-5 h-5 text-primary" />
-          </div>
-          <div>
-            <h4 className="font-semibold text-foreground">왜 빠른조회가 필요한가요?</h4>
-            <p className="text-sm text-muted-foreground mt-1">
-              공인인증서나 ID 로그인 없이도 세무사가 계좌 내역을 실시간으로 확인하여 장부 작성을 훨씬 빠르고 정확하게 할 수 있기 때문입니다.
-            </p>
-          </div>
-        </div>
+            <div className="mt-6 pt-6 border-t border-dashed border-primary/30">
+              <div className="flex items-start gap-3 bg-primary/5 p-4 rounded-lg">
+                <CheckCircle className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  <strong className="text-primary">팁:</strong> 등록 완료 후 세무사에게 알려주시면 인증서 없이도 실시간 내역 확인이 가능하여 <span className="text-accent font-semibold">장부 처리가 훨씬 빨라집니다!</span>
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );

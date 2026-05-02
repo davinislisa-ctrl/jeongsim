@@ -564,14 +564,35 @@ function GuideSection() {
   const [selectedBank, setSelectedBank] = useState("신한");
   const [hometaxDevice, setHometaxDevice] = useState<"pc" | "mobile">("pc");
 
-  const loanData: Record<string, string> = {
-    "신한": "대출 → 대출이자납입확인서",
-    "국민": "뱅킹관리 → 제증명서 발급 → 연말정산증명서 (또는 대출이자납입증명서)",
-    "우리": "대출 → 이자납입 → 이자납입내역서조회",
-    "하나": "대출 → 대출거래내역조회 → 이자납입내역서",
-    "농협": "뱅킹관리 → 증명서 → 연말정산증명서 (또는 대출거래내역조회)",
-    "기업": "뱅킹관리 → 제증명서발급 → 대출관련증명서",
-    "하나(기업)": "기업대출 → 대출계좌조회 → 이자납입내역조회"
+  const loanData: Record<string, { path: string; link?: string }> = {
+    "신한": { 
+      path: "대출 → 대출이자납입확인서", 
+      link: "https://www.shinhan.com/index.jsp" 
+    },
+    "국민": { 
+      path: "뱅킹관리 → 제증명서 발급 → 연말정산증명서 (또는 대출이자납입증명서)",
+      link: "https://www.kbstar.com/"
+    },
+    "우리": { 
+      path: "대출 → 이자납입 → 이자납입내역서조회",
+      link: "https://www.wooribank.com/"
+    },
+    "하나": { 
+      path: "대출 → 대출거래내역조회 → 이자납입내역서",
+      link: "https://www.hanabank.com/"
+    },
+    "농협": { 
+      path: "뱅킹관리 → 증명서 → 연말정산증명서 (또는 대출거래내역조회)",
+      link: "https://banking.nonghyup.com/"
+    },
+    "기업": { 
+      path: "뱅킹관리 → 제증명서발급 → 대출관련증명서",
+      link: "https://www.ibk.co.kr/"
+    },
+    "하나(기업)": { 
+      path: "기업대출 → 대출계좌조회 → 이자납입내역조회",
+      link: "https://biz.hanabank.com/"
+    }
   };
 
   const bankData: Record<string, { menu: string; steps: string[] }> = {
@@ -851,10 +872,22 @@ function GuideSection() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
-                      {Object.entries(loanData).map(([bank, path], index) => (
+                      {Object.entries(loanData).map(([bank, data], index) => (
                         <tr key={index} className="hover:bg-primary/5 transition-colors">
-                          <td className="px-6 py-4 font-bold text-foreground whitespace-nowrap">{bank}은행</td>
-                          <td className="px-6 py-4 text-muted-foreground">{path}</td>
+                          <td className="px-6 py-4 font-bold text-foreground whitespace-nowrap">
+                            {bank}은행
+                            {data.link && (
+                              <a 
+                                href={data.link} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="ml-2 inline-flex items-center gap-1 text-[10px] text-primary hover:underline font-normal bg-primary/5 px-2 py-0.5 rounded-full border border-primary/20"
+                              >
+                                <ExternalLink className="w-3 h-3" /> 바로가기
+                              </a>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-muted-foreground">{data.path}</td>
                         </tr>
                       ))}
                     </tbody>
